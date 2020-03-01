@@ -16,6 +16,7 @@
              (:file "test")
              (:file "worker")
              (:file "test-runner")
+             (:file "file-watcher")
              (:file "xref")
              (:file "asdf")
              (:file "user")))
