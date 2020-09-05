@@ -349,6 +349,29 @@ Othewise, return the position of the character."
   (slime-repl-eval-string "(breeze.user:run-all-tests)"))
 
 
+;;; integration to quicklisp
+
+;; FIXME: this function is basically a copy-paste of breeze-quicklisp-local-project-directories
+(defun breeze-quicklisp-list-systems ()
+  "Get the list of quicklisp's local project directories."
+  (car
+   (read-from-string
+    (cl-destructuring-bind (output value)
+	(slime-eval `(swank:eval-and-grab-output
+		      ,(format "%s" `(mapcar #'ql-dist:name (ql:system-list)))))
+      value))))
+
+;; (breeze-quicklisp-list-systems)
+
+;; That works, but it hangs emacs while the system is loaded
+(defun breeze-quickload ()
+  (interactive)
+  (let ((system (completing-read  "Choose a system to load: "
+				(breeze-quicklisp-list-systems))))
+    (when system
+      (slime-eval `(ql:quickload ,system)))))
+
+
 ;;; project scaffolding
 
 (defun breeze-quicklisp-local-project-directories ()
